@@ -53,3 +53,8 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Space Run
+build/
+ranking.txt
+referencia/
