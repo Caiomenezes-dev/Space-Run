@@ -8,30 +8,16 @@
 
 #include "jogo.h"
 
-typedef struct {
-    char simbolo;
-    screenColor cor;
-} TipoObstaculo;
-
-static const TipoObstaculo TIPOS[] = {
-    {'O', BROWN},     /* meteoro */
-    {'@', LIGHTRED},  /* meteoro em chamas */
-    {'#', LIGHTGRAY}, /* destroço */
-    {'*', LIGHTCYAN}, /* cometa */
-};
-#define TOTAL_TIPOS ((int)(sizeof(TIPOS) / sizeof(TIPOS[0])))
-
-/* Cria um obstáculo em coluna aleatória no topo. Devolve NULL se faltar memória. */
+/* Cria um objeto espacial sorteado, em coluna aleatória, logo acima do campo.
+   Devolve NULL se faltar memória. */
 Obstaculo *obstaculoCriar(void)
 {
     Obstaculo *novo = malloc(sizeof(Obstaculo));
     if (novo == NULL) return NULL;
 
-    const TipoObstaculo *tipo = &TIPOS[rand() % TOTAL_TIPOS];
-    novo->x = rand() % COLUNAS;
-    novo->y = 0;
-    novo->simbolo = tipo->simbolo;
-    novo->cor = tipo->cor;
+    novo->sprite = spriteObstaculoAleatorio();
+    novo->x = rand() % (COLUNAS - novo->sprite->largura + 1);
+    novo->y = 1 - novo->sprite->altura; /* só a linha de baixo aparece no primeiro frame */
     novo->proximo = NULL;
     return novo;
 }
@@ -68,13 +54,32 @@ void obstaculosMover(Obstaculo **lista)
     }
 }
 
+/* Há colisão quando alguma célula preenchida de um sprite ocupa a mesma
+   posição do campo que uma célula preenchida do outro. */
+static int spritesSeTocam(const Sprite *a, int ax, int ay, const Sprite *b, int bx, int by)
+{
+    for (int l = 0; l < a->altura; l++) {
+        for (int c = 0; c < a->largura; c++) {
+            if (a->estilo[l][c] == ' ') continue;
+
+            int lb = ay + l - by;
+            int cb = ax + c - bx;
+            if (lb >= 0 && lb < b->altura && cb >= 0 && cb < b->largura &&
+                b->estilo[lb][cb] != ' ') {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 /* Se algum obstáculo tocou a nave, remove esse obstáculo e devolve 1. */
 int obstaculosColidiu(Obstaculo **lista, const Jogador *jogador)
 {
     Obstaculo **atual = lista;
     while (*atual != NULL) {
         const Obstaculo *o = *atual;
-        if (o->y == LINHA_NAVE && o->x >= jogador->x && o->x < jogador->x + LARGURA_NAVE) {
+        if (spritesSeTocam(o->sprite, o->x, o->y, &SPRITE_NAVE, jogador->x, LINHA_NAVE)) {
             removerNo(atual);
             return 1;
         }

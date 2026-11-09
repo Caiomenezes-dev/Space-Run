@@ -10,34 +10,6 @@
 static Celula campo[LINHAS][COLUNAS];
 static Celula anterior[LINHAS][COLUNAS];
 
-static void imprimirCaixa(int x, int y, int caractere)
-{
-    screenGotoxy(x, y);
-    printf("%c", caractere);
-}
-
-void campoDesenharMoldura(void)
-{
-    int esquerda = ORIGEM_X - 1, direita = ORIGEM_X + COLUNAS;
-    int topo = ORIGEM_Y - 1, base = ORIGEM_Y + LINHAS;
-
-    screenSetColor(LIGHTBLUE, BLACK);
-    screenBoxEnable();
-    for (int x = esquerda + 1; x < direita; x++) {
-        imprimirCaixa(x, topo, BOX_HLINE);
-        imprimirCaixa(x, base, BOX_HLINE);
-    }
-    for (int y = topo + 1; y < base; y++) {
-        imprimirCaixa(esquerda, y, BOX_VLINE);
-        imprimirCaixa(direita, y, BOX_VLINE);
-    }
-    imprimirCaixa(esquerda, topo, BOX_UPLEFT);
-    imprimirCaixa(direita, topo, BOX_UPRIGHT);
-    imprimirCaixa(esquerda, base, BOX_DWNLEFT);
-    imprimirCaixa(direita, base, BOX_DWNRIGHT);
-    screenBoxDisable();
-}
-
 /* Faz o próximo campoRenderizar redesenhar todas as células. */
 void campoInvalidar(void)
 {
@@ -53,26 +25,33 @@ void campoLimpar(void)
     for (int l = 0; l < LINHAS; l++) {
         for (int c = 0; c < COLUNAS; c++) {
             campo[l][c].simbolo = ' ';
+            campo[l][c].caixa = 0;
             campo[l][c].cor = BLACK;
         }
     }
 }
 
-void campoColocarObstaculos(const Obstaculo *lista)
+void campoColocarCelula(int x, int y, char simbolo, int caixa, screenColor cor)
 {
-    for (const Obstaculo *o = lista; o != NULL; o = o->proximo) {
-        campo[o->y][o->x].simbolo = o->simbolo;
-        campo[o->y][o->x].cor = o->cor;
-    }
+    if (x < 0 || x >= COLUNAS || y < 0 || y >= LINHAS) return;
+
+    campo[y][x].simbolo = simbolo;
+    campo[y][x].caixa = (char)caixa;
+    campo[y][x].cor = cor;
 }
 
-void campoColocarNave(const Jogador *jogador)
+/* Copia o sprite para a matriz com o canto superior esquerdo em (x, y).
+   As partes fora do campo são cortadas. Se corForcada >= 0, ela substitui
+   as cores do sprite (usado para a nave piscar em vermelho). */
+void campoColocarSprite(const Sprite *sprite, int x, int y, int corForcada)
 {
-    static const char DESENHO[LARGURA_NAVE] = {'/', '^', '\\'};
-
-    for (int i = 0; i < LARGURA_NAVE; i++) {
-        campo[LINHA_NAVE][jogador->x + i].simbolo = DESENHO[i];
-        campo[LINHA_NAVE][jogador->x + i].cor = LIGHTGREEN;
+    Celula celula;
+    for (int l = 0; l < sprite->altura; l++) {
+        for (int c = 0; c < sprite->largura; c++) {
+            if (!spriteCelula(sprite, l, c, &celula)) continue;
+            if (corForcada >= 0) celula.cor = (screenColor)corForcada;
+            campoColocarCelula(x + c, y + l, celula.simbolo, celula.caixa, celula.cor);
+        }
     }
 }
 
@@ -80,14 +59,14 @@ void campoRenderizar(void)
 {
     for (int l = 0; l < LINHAS; l++) {
         for (int c = 0; c < COLUNAS; c++) {
-            if (campo[l][c].simbolo == anterior[l][c].simbolo &&
-                campo[l][c].cor == anterior[l][c].cor) {
+            const Celula *atual = &campo[l][c];
+            const Celula *antes = &anterior[l][c];
+            if (atual->simbolo == antes->simbolo && atual->caixa == antes->caixa &&
+                atual->cor == antes->cor) {
                 continue;
             }
-            screenSetColor(campo[l][c].cor, BLACK);
-            screenGotoxy(ORIGEM_X + c, ORIGEM_Y + l);
-            printf("%c", campo[l][c].simbolo);
-            anterior[l][c] = campo[l][c];
+            celulaImprimir(ORIGEM_X + c, ORIGEM_Y + l, atual);
+            anterior[l][c] = *atual;
         }
     }
 }

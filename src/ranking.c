@@ -9,13 +9,14 @@
 
 #include "jogo.h"
 
-void rankingInserir(Recorde *ranking, int *total, const char *nome, int pontos)
+/* Devolve a posição em que o recorde entrou, ou -1 se ele ficou fora do top. */
+int rankingInserir(Recorde *ranking, int *total, const char *nome, int pontos)
 {
     int pos = 0;
     while (pos < *total && ranking[pos].pontos >= pontos) {
         pos++; /* em caso de empate, quem chegou primeiro fica na frente */
     }
-    if (pos >= TOP_RANKING) return;
+    if (pos >= TOP_RANKING) return -1;
 
     if (*total < TOP_RANKING) (*total)++;
     for (int i = *total - 1; i > pos; i--) {
@@ -25,6 +26,7 @@ void rankingInserir(Recorde *ranking, int *total, const char *nome, int pontos)
     strncpy(ranking[pos].nome, nome, TAM_NOME - 1);
     ranking[pos].nome[TAM_NOME - 1] = '\0';
     ranking[pos].pontos = pontos;
+    return pos;
 }
 
 /* Devolve quantos recordes foram lidos (0 se o arquivo ainda não existir). */
