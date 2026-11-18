@@ -46,7 +46,10 @@ int main(void)
     timerInit(TICK_MS);
 
     while (telaMenu(ranking, total)) {
-        int recorde = total > 0 ? ranking[0].pontos : 0;
+        int recorde = 0;
+        if (total > 0) {
+            recorde = ranking[0].pontos;
+        }
         int pontos;
         if (jogoExecutar(recorde, &pontos)) {
             telaFimDeJogo(pontos, ranking, &total);

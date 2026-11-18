@@ -128,7 +128,12 @@ static void desenharRanking(const Recorde *ranking, int total, int x, int y, int
     }
 
     for (int i = 0; i < total; i++) {
-        screenColor cor = (i == destaque) ? LIGHTGREEN : (i == 0) ? YELLOW : WHITE;
+        screenColor cor = WHITE;
+        if (i == destaque) {
+            cor = LIGHTGREEN;
+        } else if (i == 0) {
+            cor = YELLOW;
+        }
         screenSetColor(cor, BLACK);
         screenGotoxy(x, y + 1 + i);
         printf("%2d. %-12s %5d s", i + 1, ranking[i].nome, ranking[i].pontos);
@@ -219,7 +224,11 @@ void telaFimDeJogo(int pontos, Recorde *ranking, int *total)
     limparTela();
     telaCaixa(TELA_ESQUERDA, TELA_TOPO, TELA_DIREITA, TELA_BASE, LIGHTRED);
     for (int i = 0; i < LINHAS_LETREIRO; i++) {
-        telaEscrever(7, 2 + i, i < 2 ? LIGHTRED : RED, FIM_DE_JOGO[i]);
+        screenColor cor = RED;
+        if (i < 2) {
+            cor = LIGHTRED;
+        }
+        telaEscrever(7, 2 + i, cor, FIM_DE_JOGO[i]);
     }
 
     screenSetColor(WHITE, BLACK);

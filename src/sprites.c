@@ -78,7 +78,11 @@ int spriteCelula(const Sprite *sprite, int linha, int coluna, Celula *saida)
 
     saida->simbolo = sprite->desenho[linha][coluna];
     saida->caixa = (estilo == 'c' || estilo == 'C');
-    saida->cor = (estilo == 'T' || estilo == 'C') ? sprite->corDestaque : sprite->cor;
+    if (estilo == 'T' || estilo == 'C') {
+        saida->cor = sprite->corDestaque;
+    } else {
+        saida->cor = sprite->cor;
+    }
     return 1;
 }
 

@@ -89,7 +89,10 @@ static int nivelAtual(const Partida *p)
 static long intervaloPorNivel(int inicial, int passo, int minimo, int nivel)
 {
     int intervalo = inicial - passo * (nivel - 1);
-    return intervalo < minimo ? minimo : intervalo;
+    if (intervalo < minimo) {
+        return minimo;
+    }
+    return intervalo;
 }
 
 static void moverNave(Jogador *jogador, int deslocamento)
@@ -133,7 +136,10 @@ static void moverEstrelas(Partida *p, long dtMs, long queda)
 
 static long diminuirAteZero(long valor, long dtMs)
 {
-    return valor > dtMs ? valor - dtMs : 0;
+    if (valor > dtMs) {
+        return valor - dtMs;
+    }
+    return 0;
 }
 
 static void atualizar(Partida *p, long dtMs)
@@ -197,8 +203,13 @@ static void desenharBarraNivel(int segundosNoNivel)
     screenGotoxy(BARRA_NIVEL_X, 5);
     screenBoxEnable();
     for (int i = 0; i < SEGUNDOS_POR_NIVEL; i++) {
-        screenSetColor(i < segundosNoNivel ? LIGHTCYAN : DARKGRAY, BLACK);
-        printf("%c", i < segundosNoNivel ? BOX_BLOCK : BOX_DOT);
+        if (i < segundosNoNivel) {
+            screenSetColor(LIGHTCYAN, BLACK);
+            printf("%c", BOX_BLOCK);
+        } else {
+            screenSetColor(DARKGRAY, BLACK);
+            printf("%c", BOX_DOT);
+        }
     }
     screenBoxDisable();
 }
@@ -229,7 +240,11 @@ static void desenharPainel(const Partida *p, int recorde)
 
     screenSetColor(YELLOW, BLACK);
     screenGotoxy(PAINEL_X, 7);
-    printf("Recorde: %d s   ", pontos > recorde ? pontos : recorde);
+    int melhor = recorde;
+    if (pontos > recorde) {
+        melhor = pontos;
+    }
+    printf("Recorde: %d s   ", melhor);
     screenGotoxy(PAINEL_X + 17, 7);
     if (recorde > 0 && pontos > recorde) {
         screenSetBlink();
