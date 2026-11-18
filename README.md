@@ -8,7 +8,10 @@ O visual usa os recursos da cli-lib: caracteres de desenho (`BOX_BLOCK`, `BOX_DI
 
 **Vídeo do jogo:** _adicionar o link aqui_
 
-**Equipe:** _adicionar os nomes aqui_
+**Equipe:**
+- Caio Luis De Oliveira Menezes
+- João Victor Moraes Pimentel
+- Fernando Antonio Fernandes Sotero
 
 ## Como compilar e executar
 
