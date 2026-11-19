@@ -210,8 +210,6 @@ static void lerNome(char *nome, int x, int y)
     if (tamanho == 0) strcpy(nome, NOME_PADRAO);
 }
 
-/* Descarta o que foi teclado durante a espera, para que as teclas de movimento
-   ainda sendo apertadas pelo jogador não apareçam no nome do recorde. */
 static void esperarEDescartarTeclas(void)
 {
     usleep(ESPERA_FIM_DE_JOGO_MS * 1000);

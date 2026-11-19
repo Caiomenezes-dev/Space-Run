@@ -24,8 +24,6 @@
 #define PISCA_MS 100         /* a nave alterna entre vermelho e invisível nesse intervalo */
 #define EXPLOSAO_MS 450      /* duração da animação de explosão */
 
-/* Estrelas do fundo: duas camadas que descem mais devagar que os obstáculos,
-   a de trás mais lenta que a da frente, dando sensação de profundidade. */
 #define TOTAL_ESTRELAS 30
 #define CAMADAS_ESTRELAS 2
 static const int LENTIDAO_CAMADA[CAMADAS_ESTRELAS] = {4, 2}; /* múltiplo do intervalo de queda */
@@ -153,8 +151,6 @@ static void atualizar(Partida *p, long dtMs)
     p->jogador.pontos = (int)(p->tempoMs / 1000);
     p->invulneravelMs = diminuirAteZero(p->invulneravelMs, dtMs);
 
-    /* Verifica antes de descer para pegar a nave que acabou de se mover para
-       cima de um obstáculo, que poderia sair do campo nesta mesma queda. */
     verificarColisao(p);
 
     int nivel = nivelAtual(p);
@@ -291,11 +287,6 @@ static void desenharFrame(const Partida *p, int recorde)
     screenUpdate();
 }
 
-/*
- * Joga uma partida até acabarem as vidas ou o jogador desistir.
- * Devolve 1 se a partida terminou por morte (com os pontos em *pontosFinais)
- * e 0 se o jogador desistiu.
- */
 int jogoExecutar(int recorde, int *pontosFinais)
 {
     Partida partida = {0};
@@ -331,8 +322,6 @@ int jogoExecutar(int recorde, int *pontosFinais)
         }
 
         if (timerTimeOver()) {
-            /* O tempo real decorrido é medido porque o timer da biblioteca
-               sempre dispara um pouco depois do intervalo pedido. */
             long agora = agoraMs();
             atualizar(&partida, agora - ultimoMs);
             ultimoMs = agora;

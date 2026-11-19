@@ -1,8 +1,5 @@
 /**
  * campo.c
- * Matriz do campo de jogo. A cada frame ela é remontada a partir das posições
- * dos elementos e comparada com o frame anterior: só as células que mudaram
- * são enviadas ao terminal, o que evita que a tela pisque.
  */
 
 #include "jogo.h"
@@ -40,9 +37,6 @@ void campoColocarCelula(int x, int y, char simbolo, int caixa, screenColor cor)
     campo[y][x].cor = cor;
 }
 
-/* Copia o sprite para a matriz com o canto superior esquerdo em (x, y).
-   As partes fora do campo são cortadas. Se corForcada >= 0, ela substitui
-   as cores do sprite (usado para a nave piscar em vermelho). */
 void campoColocarSprite(const Sprite *sprite, int x, int y, int corForcada)
 {
     Celula celula;

@@ -1,15 +1,11 @@
 /**
  * obstaculos.c
- * Lista encadeada dos obstáculos ativos. Cada obstáculo é criado com malloc
- * ao surgir no topo e liberado com free ao sair da tela ou atingir a nave.
  */
 
 #include <stdlib.h>
 
 #include "jogo.h"
 
-/* Cria um objeto espacial sorteado, em coluna aleatória, logo acima do campo.
-   Devolve NULL se faltar memória. */
 Obstaculo *obstaculoCriar(void)
 {
     Obstaculo *novo = malloc(sizeof(Obstaculo));
@@ -28,11 +24,6 @@ void obstaculoInserir(Obstaculo **lista, Obstaculo *novo)
     *lista = novo;
 }
 
-/*
- * As funções abaixo percorrem a lista com um ponteiro para ponteiro: "atual"
- * aponta para o campo que guarda o nó (a cabeça ou o "proximo" do anterior).
- * Assim, remover o primeiro nó ou um do meio é exatamente o mesmo código.
- */
 static void removerNo(Obstaculo **atual)
 {
     Obstaculo *removido = *atual;
@@ -54,8 +45,6 @@ void obstaculosMover(Obstaculo **lista)
     }
 }
 
-/* Há colisão quando alguma célula preenchida de um sprite ocupa a mesma
-   posição do campo que uma célula preenchida do outro. */
 static int spritesSeTocam(const Sprite *a, int ax, int ay, const Sprite *b, int bx, int by)
 {
     for (int l = 0; l < a->altura; l++) {

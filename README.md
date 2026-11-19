@@ -6,7 +6,7 @@ Você controla uma nave na parte de baixo da tela e desvia dos objetos espaciais
 
 O visual usa os recursos da cli-lib: caracteres de desenho (`BOX_BLOCK`, `BOX_DIAMOND`, `BOX_DOT`, `BOX_HLINE`, junções `BOX_T*`) nos objetos e molduras, cores, negrito, texto piscando e texto invertido. O fundo tem um campo de estrelas em duas velocidades, e cada colisão mostra uma explosão animada.
 
-**Vídeo do jogo:** _adicionar o link aqui_
+**Vídeo do jogo:** https://youtu.be/iucnELvoDp0
 
 **Equipe:**
 - Caio Luis De Oliveira Menezes

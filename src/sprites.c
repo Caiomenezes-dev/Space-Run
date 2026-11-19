@@ -1,8 +1,5 @@
 /**
  * sprites.c
- * Desenhos do jogo. As peças usam os caracteres de desenho da cli-lib
- * (BOX_BLOCK, BOX_DIAMOND, BOX_DOT, BOX_HLINE), que o terminal só mostra
- * entre screenBoxEnable() e screenBoxDisable().
  */
 
 #include <stdlib.h>

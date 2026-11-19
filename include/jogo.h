@@ -44,12 +44,6 @@ typedef struct {
 #define SPRITE_MAX_ALTURA 2
 #define SPRITE_MAX_LARGURA 5
 
-/*
- * Desenho de até 2x5 células. Para cada célula, "estilo" diz como imprimir:
- *   ' ' vazio (transparente e sem colisão)
- *   't' texto na cor principal      'T' texto na cor de destaque
- *   'c' caixa na cor principal      'C' caixa na cor de destaque
- */
 typedef struct {
     const char *nome;
     int altura;

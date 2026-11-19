@@ -1,7 +1,5 @@
 /**
  * ranking.c
- * Melhores tempos, guardados em um arquivo de texto com uma linha "nome pontos"
- * por recorde. O vetor em memória fica sempre em ordem decrescente de pontos.
  */
 
 #include <stdio.h>
